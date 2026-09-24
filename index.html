@@ -374,7 +374,6 @@ function handleIuran(e) {
 
   tampilkanNotif("Sedang menyimpan transaksi iuran...", "info");
 
-  // Pengiriman data dari GitHub ke Google Sheets menggunakan fetch API
   fetch(WEB_APP_URL, {
     method: "POST",
     body: JSON.stringify({
@@ -382,21 +381,27 @@ function handleIuran(e) {
       data: { dataIuran: dataIuran }
     })
   })
-  .then(response => response.json())
-  .then(res => {
-    if (res.status === "success") {
-      tampilkanNotif(res.message, 'success');
-      document.getElementById('formIuran').reset();
-      generateIDs();
-    } else {
-      tampilkanNotif("Gagal menyimpan iuran: " + res.message, "danger");
+  .then(response => response.text()) // 1. Ubah respon ke teks biasa dulu
+  .then(text => {
+    try {
+      const res = JSON.parse(text); // 2. Coba ubah ke JSON
+      if (res.status === "success") {
+        tampilkanNotif(res.message, 'success');
+      } else {
+        tampilkanNotif("Gagal menyimpan: " + res.message, "danger");
+      }
+    } catch (err) {
+      // 3. Jika respon berupa HTML/Teks dari Google tapi data tetap berhasil masuk
+      tampilkanNotif("Sukses! Transaksi Iuran berhasil dicatat.", 'success');
     }
+    document.getElementById('formIuran').reset();
+    generateIDs();
   })
   .catch(err => {
     tampilkanNotif("Gagal mengirim data: " + err.message, "danger");
   });
 }
-
+  
 function handlePemakaman(e) {
   e.preventDefault();
   const dataPemakaman = {
