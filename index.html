@@ -437,57 +437,61 @@ function handlePemakaman(e) {
     tampilkanNotif("Gagal mengirim data: " + err.message, "danger");
   });
 }
-  function jalankanMuatData() {
-    var tLaporan = document.getElementById('tabelLaporan');
-    if(tLaporan) {
-      tLaporan.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3"><i class="fa-solid fa-spinner fa-spin me-2"></i> Sinkronisasi laporan keuangan...</td></tr>';
-    }
-    
-    google.script.run
-      .withSuccessHandler(data => {
-        let htmlLaporan = '';
-        
-        if (data && data.laporan && data.laporan.length > 0) {
-          data.laporan.forEach(row => {
-            let idTx = row[0];
-            
-            let tglStr = "-";
-            if (row[1]) {
-              let d = new Date(row[1]);
-              tglStr = isNaN(d.getTime()) ? row[1] : d.toLocaleDateString('id-ID');
-            }
-            
-            let jenis = row[2] || "Masuk";
-            let badge = jenis === "Masuk" ? "success" : "danger";
-            let kategori = row[3] || "-";
-            
-            let nominalNum = row[4] ? parseFloat(row[4]) : 0;
-            let nominalRupiah = isNaN(nominalNum) ? "0" : nominalNum.toLocaleString('id-ID');
-            let keterangan = row[5] || "-";
+  
 
-            htmlLaporan += `<tr>
-              <td><code>${idTx}</code></td>
-              <td>${tglStr}</td>
-              <td><span class="badge bg-${badge}">${jenis}</span></td>
-              <td>${kategori}</td>
-              <td><b>Rp ${nominalRupiah}</b></td>
-              <td>${keterangan}</td>
-            </tr>`;
-          });
-        }
-        
-        if(tLaporan) {
-          tLaporan.innerHTML = htmlLaporan || '<tr><td colspan="6" class="text-center text-muted py-3">Belum ada data transaksi keuangan di spreadsheet.</td></tr>';
-        }
-      })
-      .withFailureHandler(err => {
-        if(tLaporan) {
-          tLaporan.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">Gagal memuat data dari Google Sheets.</td></tr>';
-        }
-      })
-      .getSemuaData();
+
+function jalankanMuatData() {
+  var tLaporan = document.getElementById('tabelLaporan');
+  if(tLaporan) {
+    tLaporan.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3"><i class="fa-solid fa-spinner fa-spin me-2"></i> Sinkronisasi laporan keuangan dari Google Sheets...</td></tr>';
   }
 
+  // Mengambil data dari Google Sheets via Fetch API
+  fetch(WEB_APP_URL + "?action=getLaporan")
+    .then(response => response.json())
+    .then(data => {
+      let htmlLaporan = '';
+      
+      if (data && data.laporan && data.laporan.length > 0) {
+        data.laporan.forEach(row => {
+          let idTx = row[0] || "-";
+          
+          let tglStr = "-";
+          if (row[1]) {
+            let d = new Date(row[1]);
+            tglStr = isNaN(d.getTime()) ? row[1] : d.toLocaleDateString('id-ID');
+          }
+          
+          let jenis = row[2] || "Masuk";
+          let badge = jenis === "Masuk" ? "success" : "danger";
+          let kategori = row[3] || "-";
+          
+          let nominalNum = row[4] ? parseFloat(row[4]) : 0;
+          let nominalRupiah = isNaN(nominalNum) ? "0" : nominalNum.toLocaleString('id-ID');
+          let keterangan = row[5] || "-";
+
+          htmlLaporan += `<tr>
+            <td><code>${idTx}</code></td>
+            <td>${tglStr}</td>
+            <td><span class="badge bg-${badge}">${jenis}</span></td>
+            <td>${kategori}</td>
+            <td><b>Rp ${nominalRupiah}</b></td>
+            <td>${keterangan}</td>
+          </tr>`;
+        });
+      }
+      
+      if(tLaporan) {
+        tLaporan.innerHTML = htmlLaporan || '<tr><td colspan="6" class="text-center text-muted py-3">Belum ada data transaksi keuangan di spreadsheet.</td></tr>';
+      }
+    })
+    .catch(err => {
+      console.error("Error muat data:", err);
+      if(tLaporan) {
+        tLaporan.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-3"><i class="fa-solid fa-triangle-exclamation me-2"></i> Gagal memuat data dari Google Sheets. Hari/Akses dibatasi.</td></tr>';
+      }
+    });
+}
   window.onload = function() {
     generateIDs();
     jalankanMuatData();
