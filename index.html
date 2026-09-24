@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistem Manajemen Anggota</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .sidebar { background: #2c3e50; min-height: 100vh; color: white; position: fixed; width: 240px; z-index: 1000; }
+    .sidebar .nav-link { color: #ecf0f1; border-radius: 5px; margin-bottom: 5px; cursor: pointer; padding: 12px 20px; display: block; text-decoration: none; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { background: #3498db; color: white; }
+    .main-content { margin-left: 240px; padding: 20px; }
+    .card { border: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .header-app { background: white; padding: 15px; border-bottom: 1px solid #e0e0e0; }
+    .menu-section { display: none; }
+    .menu-section.active-page { display: block; }
+    .table-dark-custom { background-color: #1e272e; color: white; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid p-0">
+  
+  <nav class="sidebar p-3">
+    <div class="text-center my-3">
+      <i class="fa-solid fa-users-gear fa-3x mb-2 text-info"></i>
+      <h5 class="text-white fw-bold m-0">GKP AWILIGAR</h5>
+      <small class="text-white">SABILULUNGAN</small>
+    </div>
+    <hr class="text-secondary">
+    <div class="nav flex-column">
+      <a class="nav-link" id="link-pendaftaran" onclick="bukaMenu('pendaftaran')"><i class="fa fa-user-plus me-2"></i> Pendaftaran</a>
+      <a class="nav-link" id="link-iuran" onclick="bukaMenu('iuran')"><i class="fa fa-wallet me-2"></i> Input Iuran</a>
+      <a class="nav-link" id="link-pemakaman" onclick="bukaMenu('pemakaman')"><i class="fa-solid fa-box-archive me-2"></i> Iuran Pemakaman</a>
+      <a class="nav-link active" id="link-laporan" onclick="bukaMenu('laporan')"><i class="fa fa-chart-line me-2"></i> Laporan Keuangan</a>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <div class="header-app d-flex justify-content-between align-items-center mb-4 rounded bg-white p-3 shadow-sm">
+      <h4 id="page-title">Laporan Arus Kas Keuangan</h4>
+      <span class="badge bg-success p-2"><i class="fa fa-shield-halved"></i> Validated Secure</span>
+    </div>
+
+    <div id="alertBox" class="alert d-none" role="alert"></div>
+
+    <section id="menu-pendaftaran" class="menu-section">
+      <form id="formDaftar" onsubmit="handlePendaftaran(event)">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <div class="card p-4">
+              <h5 class="text-primary mb-3"><i class="fa-solid fa-user"></i> Data Anggota</h5>
+              <div class="mb-3">
+                <label>ID Anggota</label>
+                <input type="text" class="form-control" id="id_anggota" readonly required>
+              </div>
+              <div class="mb-3">
+                <label>Nama Lengkap</label>
+                <input type="text" class="form-control" id="nama_anggota" required>
+              </div>
+              <div class="mb-3">
+                <label>Tempat/Tanggal Lahir</label>
+                <input type="text" class="form-control" id="ttl" placeholder="Bandung, 12-08-1995" required>
+              </div>
+              <div class="mb-3">
+                <label>Alamat Lengkap</label>
+                <textarea class="form-control" id="alamat" rows="2" required></textarea>
+              </div>
+              <div class="row">
+                <div class="col-6 mb-3">
+                  <label>Usia Saat Daftar</label>
+                  <input type="number" class="form-control" id="usia" required>
+                </div>
+                <div class="col-6 mb-3">
+                  <label>No. WhatsApp</label>
+                  <input type="tel" class="form-control" id="wa" placeholder="08xxxx" required>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 mb-3">
+                  <label>Status</label>
+                  <select class="form-select" id="status_keaktifan">
+                    <option value="Aktif">Aktif</option>
+                    <option value="Tidak Aktif">Tidak Aktif</option>
+                  </select>
+                </div>
+                <div class="col-6 mb-3">
+                  <label>Biaya Pendaftaran (Rp)</label>
+                  <input type="number" class="form-control" id="biaya_pendaftaran" value="10000" required>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <div class="card p-4 h-100 d-flex flex-column">
+              <h5 class="text-success mb-3"><i class="fa-solid fa-users"></i> Data Keluarga Penanggung Jawab</h5>
+              <div class="mb-3">
+                <label>Nama Anggota Keluarga</label>
+                <input type="text" class="form-control" id="nama_kel">
+              </div>
+              <div class="mb-3">
+                <label>Hubungan Keluarga</label>
+                <input type="text" class="form-control" id="hubungan" placeholder="Ibu, Ayah, Istri, Suami">
+              </div>
+              <div class="mb-3">
+                <label>No. WhatsApp Keluarga</label>
+                <input type="tel" class="form-control" id="wa_kel">
+              </div>
+              <div class="mb-3">
+                <label>Alamat Keluarga</label>
+                <textarea class="form-control" id="alamat_kel" rows="2"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary w-100 mt-auto py-2"><i class="fa fa-save"></i> Daftarkan Anggota</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section id="menu-iuran" class="menu-section">
+      <div class="card p-4">
+        <h5 class="text-primary mb-3"><i class="fa fa-money-bill-wave"></i> Form Catat Pembayaran Iuran</h5>
+        <form id="formIuran" onsubmit="handleIuran(event)">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label>ID Transaksi</label>
+              <input type="text" class="form-control" id="id_transaksi" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>ID Anggota</label>
+              <input type="text" class="form-control" id="iuran_id_anggota" placeholder="Masukkan ID Anggota valid" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Nama Anggota</label>
+              <input type="text" class="form-control" id="iuran_nama_anggota" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Nominal Iuran (Rp)</label>
+              <input type="number" class="form-control" id="nominal_iuran" required>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label>Tanggal Bayar</label>
+              <input type="date" class="form-control" id="tgl_bayar" required>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label>Tanggal Jatuh Tempo</label>
+              <input type="date" class="form-control" id="jatuh_tempo" required>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label>Status</label>
+              <select class="form-select" id="status_iuran">
+                <option value="Lunas">Lunas</option>
+                <option value="Belum Lunas">Belum Lunas</option>
+              </select>
+            </div>
+            <div class="col-12 mb-3">
+              <label>Catatan / Riwayat Pembayaran Bulan ke-</label>
+              <input type="text" class="form-control" id="riwayat" placeholder="Contoh: Pembayaran Iuran Bulan Mei 2026">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success w-100 py-2"><i class="fa fa-paper-plane"></i> Simpan Transaksi Iuran</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="menu-pemakaman" class="menu-section">
+      <div class="card p-4">
+        <h5 class="text-info mb-3"><i class="fa-solid fa-shield-halved"></i> Form Catat Pembayaran Iuran Pemakaman</h5>
+        <form id="formPemakaman" onsubmit="handlePemakaman(event)">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label>ID Transaksi Pemakaman</label>
+              <input type="text" class="form-control" id="pmk_id_transaksi" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>ID Anggota</label>
+              <input type="text" class="form-control" id="pmk_id_anggota" placeholder="Masukkan ID Anggota valid" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Nama Anggota</label>
+              <input type="text" class="form-control" id="pmk_nama_anggota" placeholder="Nama lengkap jemaat" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Nominal Iuran (Rp)</label>
+              <input type="number" class="form-control" id="pmk_nominal" placeholder="Contoh: 50000" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Tanggal Bayar</label>
+              <input type="date" class="form-control" id="pmk_tgl_bayar" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Keterangan / Riwayat Tahun Ke-</label>
+              <input type="text" class="form-control" id="pmk_keterangan" placeholder="Contoh: Pembayaran Iuran Pemakaman Tahun 2026">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-info text-white w-100 py-2"><i class="fa fa-save"></i> Simpan Transaksi Pemakaman</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="menu-laporan" class="menu-section active-page">
+      <div class="card p-4">
+        <h5 class="mb-3 text-dark fw-bold"><i class="fa fa-file-invoice-dollar me-2"></i> Jurnal Transaksi Keuangan</h5>
+        <div class="table-responsive">
+          <table class="table table-hover table-striped border align-middle">
+            <thead class="table-dark-custom">
+              <tr>
+                <th>ID Transaksi</th>
+                <th>Tanggal</th>
+                <th>Jenis</th>
+                <th>Kategori</th>
+                <th>Nominal</th>
+                <th>Keterangan</th>
+              </tr>
+            </thead>
+            <tbody id="tabelLaporan">
+              <tr><td colspan="6" class="text-center text-muted py-3">Memuat data transaksi...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function generateIDs() {
+    if(document.getElementById('id_anggota')) {
+      document.getElementById('id_anggota').value = "ANG-" + Math.floor(1000 + Math.random() * 9000);
+    }
+    if(document.getElementById('id_transaksi')) {
+      document.getElementById('id_transaksi').value = "TX-" + Math.floor(10000 + Math.random() * 90000);
+    }
+    if(document.getElementById('pmk_id_transaksi')) {
+      document.getElementById('pmk_id_transaksi').value = "TXP-" + Math.floor(10000 + Math.random() * 90000);
+    }
+    if(document.getElementById('pmk_tgl_bayar')) {
+      document.getElementById('pmk_tgl_bayar').value = new Date().toISOString().split('T')[0];
+    }
+  }
+
+  function bukaMenu(namaMenu) {
+    document.querySelectorAll('.menu-section').forEach(el => el.classList.remove('active-page'));
+    document.querySelectorAll('.sidebar .nav-link').forEach(el => el.classList.remove('active'));
+    
+    var targetMenu = document.getElementById('menu-' + namaMenu);
+    if(targetMenu) targetMenu.classList.add('active-page');
+    
+    var tombolAktif = document.getElementById('link-' + namaMenu);
+    if(tombolAktif) tombolAktif.classList.add('active');
+    
+    const titles = { 
+      'pendaftaran': 'Form Pendaftaran Anggota Baru', 
+      'iuran': 'Form Catat Pembayaran Iuran', 
+      'pemakaman': 'Form Catat Pembayaran Iuran Pemakaman',
+      'laporan': 'Laporan Arus Kas Keuangan'
+    };
+    document.getElementById('page-title').innerText = titles[namaMenu] || 'GKP AWILIGAR';
+
+    if(namaMenu === 'laporan') {
+      jalankanMuatData();
+    }
+  }
+
+  function tampilkanNotif(pesan, tipe) {
+    const box = document.getElementById('alertBox');
+    if(box) {
+      box.className = `alert alert-${tipe} d-block`;
+      box.innerText = pesan;
+      window.scrollTo({top: 0, behavior: 'smooth'});
+      setTimeout(() => { box.className = 'alert d-none'; }, 4000);
+    }
+  }
+
+  function handlePendaftaran(e) {
+    e.preventDefault();
+    const dataAnggota = {
+      id: document.getElementById('id_anggota').value,
+      nama: document.getElementById('nama_anggota').value,
+      ttl: document.getElementById('ttl').value,
+      alamat: document.getElementById('alamat').value,
+      usia: document.getElementById('usia').value,
+      wa: document.getElementById('wa').value,
+      status: document.getElementById('status_keaktifan').value,
+      biaya: document.getElementById('biaya_pendaftaran').value
+    };
+    const dataKeluarga = {
+      nama_kel: document.getElementById('nama_kel').value,
+      hubungan: document.getElementById('hubungan').value,
+      wa_kel: document.getElementById('wa_kel').value,
+      alamat_kel: document.getElementById('alamat_kel').value
+    };
+
+    tampilkanNotif("Sedang menyimpan data anggota...", "info");
+
+    google.script.run
+      .withSuccessHandler(res => {
+        tampilkanNotif(res, 'success');
+        document.getElementById('formDaftar').reset();
+        generateIDs();
+      })
+      .withFailureHandler(err => {
+        tampilkanNotif("Gagal menyimpan pendaftaran: " + err.message, "danger");
+      })
+      .simpanAnggota(dataAnggota, dataKeluarga);
+  }
+
+  function handleIuran(e) {
+    e.preventDefault();
+    const dataIuran = {
+      id_transaksi: document.getElementById('id_transaksi').value,
+      id_anggota: document.getElementById('iuran_id_anggota').value,
+      nama_anggota: document.getElementById('iuran_nama_anggota').value,
+      nominal: document.getElementById('nominal_iuran').value,
+      tgl_bayar: document.getElementById('tgl_bayar').value,
+      status: document.getElementById('status_iuran').value,
+      jatuh_tempo: document.getElementById('jatuh_tempo').value,
+      riwayat: document.getElementById('riwayat').value
+    };
+
+    tampilkanNotif("Sedang menyimpan transaksi iuran...", "info");
+
+    google.script.run
+      .withSuccessHandler(res => {
+        tampilkanNotif(res, 'success');
+        document.getElementById('formIuran').reset();
+        generateIDs();
+      })
+      .withFailureHandler(err => {
+        tampilkanNotif("Gagal menyimpan iuran: " + err.message, "danger");
+      })
+      .simpanIuran(dataIuran);
+  }
+
+  function handlePemakaman(e) {
+    e.preventDefault();
+    const dataPemakaman = {
+      id_transaksi: document.getElementById('pmk_id_transaksi').value,
+      id_anggota: document.getElementById('pmk_id_anggota').value,
+      nama_anggota: document.getElementById('pmk_nama_anggota').value,
+      nominal: document.getElementById('pmk_nominal').value,
+      tgl_bayar: document.getElementById('pmk_tgl_bayar').value,
+      keterangan: document.getElementById('pmk_keterangan').value
+    };
+
+    tampilkanNotif("Sedang menyimpan transaksi iuran pemakaman...", "info");
+
+    google.script.run
+      .withSuccessHandler(res => {
+        tampilkanNotif(res, 'success');
+        document.getElementById('formPemakaman').reset();
+        generateIDs();
+      })
+      .withFailureHandler(err => {
+        tampilkanNotif("Gagal menyimpan iuran pemakaman: " + err.message, "danger");
+      })
+      .simpanIuranPemakaman(dataPemakaman);
+  }
+
+  function jalankanMuatData() {
+    var tLaporan = document.getElementById('tabelLaporan');
+    if(tLaporan) {
+      tLaporan.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3"><i class="fa-solid fa-spinner fa-spin me-2"></i> Sinkronisasi laporan keuangan...</td></tr>';
+    }
+    
+    google.script.run
+      .withSuccessHandler(data => {
+        let htmlLaporan = '';
+        
+        if (data && data.laporan && data.laporan.length > 0) {
+          data.laporan.forEach(row => {
+            let idTx = row[0];
+            
+            let tglStr = "-";
+            if (row[1]) {
+              let d = new Date(row[1]);
+              tglStr = isNaN(d.getTime()) ? row[1] : d.toLocaleDateString('id-ID');
+            }
+            
+            let jenis = row[2] || "Masuk";
+            let badge = jenis === "Masuk" ? "success" : "danger";
+            let kategori = row[3] || "-";
+            
+            let nominalNum = row[4] ? parseFloat(row[4]) : 0;
+            let nominalRupiah = isNaN(nominalNum) ? "0" : nominalNum.toLocaleString('id-ID');
+            let keterangan = row[5] || "-";
+
+            htmlLaporan += `<tr>
+              <td><code>${idTx}</code></td>
+              <td>${tglStr}</td>
+              <td><span class="badge bg-${badge}">${jenis}</span></td>
+              <td>${kategori}</td>
+              <td><b>Rp ${nominalRupiah}</b></td>
+              <td>${keterangan}</td>
+            </tr>`;
+          });
+        }
+        
+        if(tLaporan) {
+          tLaporan.innerHTML = htmlLaporan || '<tr><td colspan="6" class="text-center text-muted py-3">Belum ada data transaksi keuangan di spreadsheet.</td></tr>';
+        }
+      })
+      .withFailureHandler(err => {
+        if(tLaporan) {
+          tLaporan.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">Gagal memuat data dari Google Sheets.</td></tr>';
+        }
+      })
+      .getSemuaData();
+  }
+
+  window.onload = function() {
+    generateIDs();
+    jalankanMuatData();
+  };
+</script>
+</body>
+</html>
