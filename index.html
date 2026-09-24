@@ -359,58 +359,82 @@ function handlePendaftaran(e) {
   });
 }
   
-  function handleIuran(e) {
-    e.preventDefault();
-    const dataIuran = {
-      id_transaksi: document.getElementById('id_transaksi').value,
-      id_anggota: document.getElementById('iuran_id_anggota').value,
-      nama_anggota: document.getElementById('iuran_nama_anggota').value,
-      nominal: document.getElementById('nominal_iuran').value,
-      tgl_bayar: document.getElementById('tgl_bayar').value,
-      status: document.getElementById('status_iuran').value,
-      jatuh_tempo: document.getElementById('jatuh_tempo').value,
-      riwayat: document.getElementById('riwayat').value
-    };
+ // Gantilah URL di bawah ini dengan URL Web App hasil Deploy Google Apps Script Anda!
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby4hoVn3HYQPMQzjJFJTwMpTZJ7ZLS23giKrnUrpIXH3uPj_jydzcTVTLlB15aGs8pM/exec";
 
-    tampilkanNotif("Sedang menyimpan transaksi iuran...", "info");
+function handleIuran(e) {
+  e.preventDefault();
+  const dataIuran = {
+    id_transaksi: document.getElementById('id_transaksi').value,
+    id_anggota: document.getElementById('iuran_id_anggota').value,
+    nama_anggota: document.getElementById('iuran_nama_anggota').value,
+    nominal: document.getElementById('nominal_iuran').value,
+    tgl_bayar: document.getElementById('tgl_bayar').value,
+    status: document.getElementById('status_iuran').value,
+    jatuh_tempo: document.getElementById('jatuh_tempo').value,
+    riwayat: document.getElementById('riwayat').value
+  };
 
-    google.script.run
-      .withSuccessHandler(res => {
-        tampilkanNotif(res, 'success');
-        document.getElementById('formIuran').reset();
-        generateIDs();
-      })
-      .withFailureHandler(err => {
-        tampilkanNotif("Gagal menyimpan iuran: " + err.message, "danger");
-      })
-      .simpanIuran(dataIuran);
-  }
+  tampilkanNotif("Sedang menyimpan transaksi iuran...", "info");
 
-  function handlePemakaman(e) {
-    e.preventDefault();
-    const dataPemakaman = {
-      id_transaksi: document.getElementById('pmk_id_transaksi').value,
-      id_anggota: document.getElementById('pmk_id_anggota').value,
-      nama_anggota: document.getElementById('pmk_nama_anggota').value,
-      nominal: document.getElementById('pmk_nominal').value,
-      tgl_bayar: document.getElementById('pmk_tgl_bayar').value,
-      keterangan: document.getElementById('pmk_keterangan').value
-    };
+  // Pengiriman data dari GitHub ke Google Sheets menggunakan fetch API
+  fetch(WEB_APP_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "simpanIuran",
+      data: { dataIuran: dataIuran }
+    })
+  })
+  .then(response => response.json())
+  .then(res => {
+    if (res.status === "success") {
+      tampilkanNotif(res.message, 'success');
+      document.getElementById('formIuran').reset();
+      generateIDs();
+    } else {
+      tampilkanNotif("Gagal menyimpan iuran: " + res.message, "danger");
+    }
+  })
+  .catch(err => {
+    tampilkanNotif("Gagal mengirim data: " + err.message, "danger");
+  });
+}
 
-    tampilkanNotif("Sedang menyimpan transaksi iuran pemakaman...", "info");
+function handlePemakaman(e) {
+  e.preventDefault();
+  const dataPemakaman = {
+    id_transaksi: document.getElementById('pmk_id_transaksi').value,
+    id_anggota: document.getElementById('pmk_id_anggota').value,
+    nama_anggota: document.getElementById('pmk_nama_anggota').value,
+    nominal: document.getElementById('pmk_nominal').value,
+    tgl_bayar: document.getElementById('pmk_tgl_bayar').value,
+    keterangan: document.getElementById('pmk_keterangan').value
+  };
 
-    google.script.run
-      .withSuccessHandler(res => {
-        tampilkanNotif(res, 'success');
-        document.getElementById('formPemakaman').reset();
-        generateIDs();
-      })
-      .withFailureHandler(err => {
-        tampilkanNotif("Gagal menyimpan iuran pemakaman: " + err.message, "danger");
-      })
-      .simpanIuranPemakaman(dataPemakaman);
-  }
+  tampilkanNotif("Sedang menyimpan transaksi iuran pemakaman...", "info");
 
+  // Pengiriman data dari GitHub ke Google Sheets menggunakan fetch API
+  fetch(WEB_APP_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "simpanIuranPemakaman",
+      data: { dataPemakaman: dataPemakaman }
+    })
+  })
+  .then(response => response.json())
+  .then(res => {
+    if (res.status === "success") {
+      tampilkanNotif(res.message, 'success');
+      document.getElementById('formPemakaman').reset();
+      generateIDs();
+    } else {
+      tampilkanNotif("Gagal menyimpan iuran pemakaman: " + res.message, "danger");
+    }
+  })
+  .catch(err => {
+    tampilkanNotif("Gagal mengirim data: " + err.message, "danger");
+  });
+}
   function jalankanMuatData() {
     var tLaporan = document.getElementById('tabelLaporan');
     if(tLaporan) {
