@@ -407,8 +407,6 @@ function handlePemakaman(e) {
   });
 }
   
-
-
 function jalankanMuatData() {
   var tLaporan = document.getElementById('tabelLaporan');
   if(tLaporan) {
@@ -461,10 +459,16 @@ function jalankanMuatData() {
       }
     });
 }
-  window.onload = function() {
-    generateIDs();
-    jalankanMuatData();
-  };
+
+window.onload = function() {
+  generateIDs();
+  jalankanMuatData();
+};
+
+document.addEventListener("DOMContentLoaded", function() {
+  generateIDs();
+  jalankanMuatData();
+});
 </script>
 </body>
 </html>
