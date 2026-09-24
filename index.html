@@ -227,6 +227,38 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+  // FITUR MOCKING: Agar tidak error 'google is not defined' saat dibuka lokal/VS Code
+if (typeof google === 'undefined') {
+  window.google = {
+    script: {
+      run: {
+        withSuccessHandler: function(callback) {
+          this.successCallback = callback;
+          return this;
+        },
+        withFailureHandler: function(callback) {
+          this.failureCallback = callback;
+          return this;
+        },
+        getSemuaData: function() {
+          // Mengirim data dummy saat diuji lokal
+          setTimeout(() => {
+            if (this.successCallback) {
+              this.successCallback({
+                laporan: [
+                  ["TX-10001", "2026-09-24", "Masuk", "Pendaftaran Anggota", 10000, "Biaya pendaftaran anggota baru: Sample"]
+                ]
+              });
+            }
+          }, 500);
+        },
+        simpanAnggota: function() { setTimeout(() => this.successCallback("Sukses (Local Test)"), 500); },
+        simpanIuran: function() { setTimeout(() => this.successCallback("Sukses (Local Test)"), 500); },
+        simpanIuranPemakaman: function() { setTimeout(() => this.successCallback("Sukses (Local Test)"), 500); }
+      }
+    }
+  };
+}
   function generateIDs() {
     if(document.getElementById('id_anggota')) {
       document.getElementById('id_anggota').value = "ANG-" + Math.floor(1000 + Math.random() * 9000);
