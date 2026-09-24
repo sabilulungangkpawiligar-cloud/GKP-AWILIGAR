@@ -312,39 +312,50 @@
     }
   }
 
-  function handlePendaftaran(e) {
-    e.preventDefault();
-    const dataAnggota = {
-      id: document.getElementById('id_anggota').value,
-      nama: document.getElementById('nama_anggota').value,
-      ttl: document.getElementById('ttl').value,
-      alamat: document.getElementById('alamat').value,
-      usia: document.getElementById('usia').value,
-      wa: document.getElementById('wa').value,
-      status: document.getElementById('status_keaktifan').value,
-      biaya: document.getElementById('biaya_pendaftaran').value
-    };
-    const dataKeluarga = {
-      nama_kel: document.getElementById('nama_kel').value,
-      hubungan: document.getElementById('hubungan').value,
-      wa_kel: document.getElementById('wa_kel').value,
-      alamat_kel: document.getElementById('alamat_kel').value
-    };
+  // Ganti dengan Web App URL hasil Deploy Anda
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby4hoVn3HYQPMQzjJFJTwMpTZJ7ZLS23giKrnUrpIXH3uPj_jydzcTVTLlB15aGs8pM/exec";
 
-    tampilkanNotif("Sedang menyimpan data anggota...", "info");
+function handlePendaftaran(e) {
+  e.preventDefault();
+  const payload = {
+    action: "simpanAnggota",
+    data: {
+      dataAnggota: {
+        id: document.getElementById('id_anggota').value,
+        nama: document.getElementById('nama_anggota').value,
+        ttl: document.getElementById('ttl').value,
+        alamat: document.getElementById('alamat').value,
+        usia: document.getElementById('usia').value,
+        wa: document.getElementById('wa').value,
+        status: document.getElementById('status_keaktifan').value,
+        biaya: document.getElementById('biaya_pendaftaran').value
+      },
+      dataKeluarga: {
+        nama_kel: document.getElementById('nama_kel').value,
+        hubungan: document.getElementById('hubungan').value,
+        wa_kel: document.getElementById('wa_kel').value,
+        alamat_kel: document.getElementById('alamat_kel').value
+      }
+    }
+  };
 
-    google.script.run
-      .withSuccessHandler(res => {
-        tampilkanNotif(res, 'success');
-        document.getElementById('formDaftar').reset();
-        generateIDs();
-      })
-      .withFailureHandler(err => {
-        tampilkanNotif("Gagal menyimpan pendaftaran: " + err.message, "danger");
-      })
-      .simpanAnggota(dataAnggota, dataKeluarga);
-  }
+  tampilkanNotif("Sedang menyimpan data anggota...", "info");
 
+  fetch(WEB_APP_URL, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(res => {
+    tampilkanNotif(res.message, 'success');
+    document.getElementById('formDaftar').reset();
+    generateIDs();
+  })
+  .catch(err => {
+    tampilkanNotif("Gagal menyimpan: " + err.message, "danger");
+  });
+}
+  
   function handleIuran(e) {
     e.preventDefault();
     const dataIuran = {
