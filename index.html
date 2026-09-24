@@ -264,14 +264,14 @@
     }
   };
 }
-  function generateIDs() {
+function generateIDs() {
   if(document.getElementById('id_anggota')) {
-   
-    let randomNum = Math.floor(Math.random() * 9999) + 1;
-    let formattedID = "ANG-" + String(randomNum).padStart(4, '0');
-    
-    document.getElementById('id_anggota').value = formattedID;
+    // Mengambil nomor urut otomatis dari Google Sheets
+    google.script.run.withSuccessHandler(function(nextID) {
+      document.getElementById('id_anggota').value = nextID;
+    }).getNextMemberID(); 
   }
+  
   if(document.getElementById('id_transaksi')) {
     document.getElementById('id_transaksi').value = "TX-" + Math.floor(10000 + Math.random() * 90000);
   }
