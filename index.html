@@ -265,20 +265,24 @@
   };
 }
   function generateIDs() {
-    if(document.getElementById('id_anggota')) {
-      document.getElementById('id_anggota').value = "ANG-" + Math.floor(1000 + Math.random() * 9000);
-    }
-    if(document.getElementById('id_transaksi')) {
-      document.getElementById('id_transaksi').value = "TX-" + Math.floor(10000 + Math.random() * 90000);
-    }
-    if(document.getElementById('pmk_id_transaksi')) {
-      document.getElementById('pmk_id_transaksi').value = "TXP-" + Math.floor(10000 + Math.random() * 90000);
-    }
-    if(document.getElementById('pmk_tgl_bayar')) {
-      document.getElementById('pmk_tgl_bayar').value = new Date().toISOString().split('T')[0];
-    }
+  if(document.getElementById('id_anggota')) {
+   
+    let randomNum = Math.floor(Math.random() * 9999) + 1;
+    let formattedID = "ANG-" + String(randomNum).padStart(4, '0');
+    
+    document.getElementById('id_anggota').value = formattedID;
   }
-
+  if(document.getElementById('id_transaksi')) {
+    document.getElementById('id_transaksi').value = "TX-" + Math.floor(10000 + Math.random() * 90000);
+  }
+  if(document.getElementById('pmk_id_transaksi')) {
+    document.getElementById('pmk_id_transaksi').value = "TXP-" + Math.floor(10000 + Math.random() * 90000);
+  }
+  if(document.getElementById('pmk_tgl_bayar')) {
+    document.getElementById('pmk_tgl_bayar').value = new Date().toISOString().split('T')[0];
+  }
+}
+  
   function bukaMenu(namaMenu) {
     document.querySelectorAll('.menu-section').forEach(el => el.classList.remove('active-page'));
     document.querySelectorAll('.sidebar .nav-link').forEach(el => el.classList.remove('active'));
