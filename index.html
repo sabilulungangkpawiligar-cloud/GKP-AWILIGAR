@@ -266,7 +266,7 @@
 }
 function generateIDs() {
   if(document.getElementById('id_anggota')) {
-    // Mengambil nomor urut otomatis dari Google Sheets
+    // Memanggil fungsi server untuk mengambil nomor urut otomatis
     google.script.run.withSuccessHandler(function(nextID) {
       document.getElementById('id_anggota').value = nextID;
     }).getNextMemberID(); 
@@ -275,13 +275,14 @@ function generateIDs() {
   if(document.getElementById('id_transaksi')) {
     document.getElementById('id_transaksi').value = "TX-" + Math.floor(10000 + Math.random() * 90000);
   }
-  if(document.getElementById('pmk_id_transaksi')) {
+  if(document.getElementById('id_transaksi')) {
     document.getElementById('pmk_id_transaksi').value = "TXP-" + Math.floor(10000 + Math.random() * 90000);
   }
   if(document.getElementById('pmk_tgl_bayar')) {
-    document.getElementById('pmk_tgl_bayar').value = new Date().toISOString().split('T')[0];
+    document.getElementById('pmk_tgl_bayar').value = new Date().toISOString().split('T');
   }
 }
+
   
   function bukaMenu(namaMenu) {
     document.querySelectorAll('.menu-section').forEach(el => el.classList.remove('active-page'));
