@@ -247,10 +247,9 @@
   const elAnggota = document.getElementById('id_anggota');
   if(elAnggota) {
     if (!elAnggota.value) {
-      elAnggota.value = "0001"; // Cadangan tampilan awal
+      elAnggota.value = "0001";
     }
 
-    // Panggilan fetch dengan penanganan redirect CORS
     fetch(WEB_APP_URL + "?action=getNextId", {
       method: "GET",
       redirect: "follow"
