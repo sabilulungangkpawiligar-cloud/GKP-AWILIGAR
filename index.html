@@ -252,7 +252,7 @@
   </div>
 </footer>
 </div>
-<!-- 1. TEMPATKAN MODAL KUITANSI DI SINI (SEBELUM SCRIPT) -->
+
 <div class="modal fade" id="modalKuitansi" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -454,7 +454,6 @@ function handleIuran(e) {
   .then(text => {
     tampilkanNotif("Sukses! Transaksi Iuran berhasil dicatat.", 'success');
     
-    // TAMPILKAN KUITANSI SETELAH SUKSES SIMPAN
     tampilkanKuitansi(dataIuran);
 
     document.getElementById('formIuran').reset();
