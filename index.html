@@ -234,7 +234,6 @@
 <script>
 
   function generateIDs() {
-  // 1. Set ID Transaksi Iuran & Pemakaman
   if(document.getElementById('id_transaksi')) {
     document.getElementById('id_transaksi').value = "TX-" + Math.floor(10000 + Math.random() * 90000);
   }
@@ -245,26 +244,28 @@
     document.getElementById('pmk_tgl_bayar').value = new Date().toISOString().split('T')[0];
   }
 
-  // 2. Set ID Anggota (Berikan nilai default '0001' dulu agar tidak kosong)
   const elAnggota = document.getElementById('id_anggota');
   if(elAnggota) {
     if (!elAnggota.value) {
-      elAnggota.value = "0001"; // Default cadangan jika server belum merespon
+      elAnggota.value = "0001"; // Cadangan tampilan awal
     }
 
-    // Ambil ID urut yang sebenarnya dari Google Sheets
-    fetch(WEB_APP_URL + "?action=getNextId")
-      .then(res => res.json())
-      .then(data => {
-        if(data && data.nextId) {
-          elAnggota.value = data.nextId; 
-        }
-      })
-      .catch(err => {
-        console.error("Gagal mengambil ID urut, menggunakan nilai default:", err);
-      });
+    // Panggilan fetch dengan penanganan redirect CORS
+    fetch(WEB_APP_URL + "?action=getNextId", {
+      method: "GET",
+      redirect: "follow"
+    })
+    .then(res => res.json())
+    .then(data => {
+      if(data && data.nextId) {
+        elAnggota.value = data.nextId; 
+      }
+    })
+    .catch(err => {
+      console.error("Gagal mengambil ID urut:", err);
+    });
   }
-}  
+}
   function bukaMenu(namaMenu) {
     document.querySelectorAll('.menu-section').forEach(el => el.classList.remove('active-page'));
     document.querySelectorAll('.sidebar .nav-link').forEach(el => el.classList.remove('active'));
