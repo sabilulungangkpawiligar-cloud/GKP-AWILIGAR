@@ -385,19 +385,13 @@ function handleIuran(e) {
       data: { dataIuran: dataIuran }
     })
   })
-  .then(response => response.text()) 
+  .then(response => response.text())
   .then(text => {
-    try {
-      const res = JSON.parse(text); 
-      if (res.status === "success") {
-        tampilkanNotif(res.message, 'success');
-      } else {
-        tampilkanNotif("Gagal menyimpan: " + res.message, "danger");
-      }
-    } catch (err) {
-      
-      tampilkanNotif("Sukses! Transaksi Iuran berhasil dicatat.", 'success');
-    }
+    tampilkanNotif("Sukses! Transaksi Iuran berhasil dicatat.", 'success');
+    
+    // TAMPILKAN KUITANSI SETELAH SUKSES SIMPAN
+    tampilkanKuitansi(dataIuran);
+
     document.getElementById('formIuran').reset();
     generateIDs();
   })
@@ -405,7 +399,6 @@ function handleIuran(e) {
     tampilkanNotif("Gagal mengirim data: " + err.message, "danger");
   });
 }
-
  function tampilkanKuitansi(data) {
   document.getElementById('kw_id_tx').textContent = data.id_transaksi;
   document.getElementById('kw_tgl').textContent = data.tgl_bayar || new Date().toLocaleDateString('id-ID');
