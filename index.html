@@ -17,6 +17,28 @@
     .menu-section.active-page { display: block; }
     .table-dark-custom { background-color: #1e272e; color: white; }
   </style>
+  <style>
+  @media print {
+    /* Sembunyikan semua elemen web saat mencetak */
+    body * {
+      visibility: hidden;
+    }
+    /* Tampilkan hanya area kuitansi */
+    #areaKuitansi, #areaKuitansi * {
+      visibility: visible;
+    }
+    #areaKuitansi {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      padding: 20px !important;
+    }
+    .modal-footer, .btn-close {
+      display: none !important;
+    }
+  }
+</style>
 </head>
 <body>
 
