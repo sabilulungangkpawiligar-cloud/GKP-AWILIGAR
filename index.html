@@ -19,23 +19,36 @@
   </style>
   <style>
   @media print {
-    /* Sembunyikan semua elemen web saat mencetak */
+    /* 1. Sembunyikan semua elemen di luar kuitansi */
     body * {
       visibility: hidden;
     }
-    /* Tampilkan hanya area kuitansi */
+
+    /* 2. Atur area kuitansi agar pas di pojok kiri atas halaman cetak */
     #areaKuitansi, #areaKuitansi * {
       visibility: visible;
     }
+
     #areaKuitansi {
       position: absolute;
       left: 0;
       top: 0;
       width: 100%;
-      padding: 20px !important;
+      margin: 0 !important;
+      padding: 0 !important;
     }
-    .modal-footer, .btn-close {
+
+    /* 3. Hilangkan tombol & elemen yang tidak perlu saat diprint */
+    .modal-footer, 
+    .btn-close,
+    .modal-header {
       display: none !important;
+    }
+
+    /* 4. Hilangkan margin bawaan halaman cetak browser */
+    @page {
+      margin: 1cm;
+      size: auto;
     }
   }
 </style>
