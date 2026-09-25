@@ -247,7 +247,7 @@
   const elAnggota = document.getElementById('id_anggota');
   if(elAnggota) {
     if (!elAnggota.value) {
-      elAnggota.value = "ANG-0001";
+      elAnggota.value = "0001";
     }
 
     fetch(WEB_APP_URL + "?action=getNextId", {
