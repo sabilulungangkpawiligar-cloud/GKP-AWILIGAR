@@ -363,17 +363,17 @@ function handleIuran(e) {
       data: { dataIuran: dataIuran }
     })
   })
-  .then(response => response.text()) // 1. Ubah respon ke teks biasa dulu
+  .then(response => response.text()) 
   .then(text => {
     try {
-      const res = JSON.parse(text); // 2. Coba ubah ke JSON
+      const res = JSON.parse(text); 
       if (res.status === "success") {
         tampilkanNotif(res.message, 'success');
       } else {
         tampilkanNotif("Gagal menyimpan: " + res.message, "danger");
       }
     } catch (err) {
-      // 3. Jika respon berupa HTML/Teks dari Google tapi data tetap berhasil masuk
+      
       tampilkanNotif("Sukses! Transaksi Iuran berhasil dicatat.", 'success');
     }
     document.getElementById('formIuran').reset();
