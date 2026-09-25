@@ -245,13 +245,77 @@
       </div>
     </section>
   </main>
+  
  <footer style="width: 100%; background-color: #ffffff; border-top: 1px solid #e5e7eb; margin-top: auto;">
   <div style="padding: 12px 16px; text-align: center; font-size: 11px; color: #6b7280;">
     &copy; <span id="current-year"></span>2026 Aplikasi Form Pendaftaran Anggota.Data disimpan secara aman di Google Sheets.(By JEFFRY)
   </div>
 </footer>
 </div>
+<!-- 1. TEMPATKAN MODAL KUITANSI DI SINI (SEBELUM SCRIPT) -->
+<div class="modal fade" id="modalKuitansi" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body p-4" id="areaKuitansi">
+        <div class="text-center mb-3 border-bottom pb-2">
+          <h5 class="fw-bold mb-0">GKP AWILIGAR</h5>
+          <small class="text-muted">Bukti Pembayaran Iuran Jemaat</small>
+        </div>
+        
+        <table class="table table-borderless table-sm fs-6 mb-3">
+          <tr>
+            <td class="text-muted" style="width: 35%;">No. Transaksi</td>
+            <td style="width: 5%;">:</td>
+            <th><span id="kw_id_tx"></span></th>
+          </tr>
+          <tr>
+            <td class="text-muted">Tanggal Bayar</td>
+            <td>:</td>
+            <td><span id="kw_tgl"></span></td>
+          </tr>
+          <tr>
+            <td class="text-muted">ID / Nama Anggota</td>
+            <td>:</td>
+            <td><b><span id="kw_id_anggota"></span></b> - <span id="kw_nama"></span></td>
+          </tr>
+          <tr>
+            <td class="text-muted">Jenis / Riwayat</td>
+            <td>:</td>
+            <td><span id="kw_riwayat"></span></td>
+          </tr>
+          <tr>
+            <td class="text-muted">Jumlah Dibayar</td>
+            <td>:</td>
+            <td class="fs-5 fw-bold text-success"><span id="kw_nominal"></span></td>
+          </tr>
+          <tr>
+            <td class="text-muted">Status</td>
+            <td>:</td>
+            <td><span class="badge bg-success" id="kw_status">Lunas</span></td>
+          </tr>
+        </table>
 
+        <div class="d-flex justify-content-between text-center mt-4 pt-3 border-top fs-7 text-muted">
+          <div>
+            <p class="mb-4">Penyetor,</p>
+            <p class="mb-0"><u>(<span id="kw_ttd_penyetor"></span>)</u></p>
+          </div>
+          <div>
+            <p class="mb-4">Bendahara / Pengurus,</p>
+            <p class="mb-0"><u>( GKP Awiligar )</u></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer d-print-none">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="cetakKuitansi()">
+          <i class="fa-solid fa-print me-1"></i> Cetak / Simpan PDF
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 
@@ -518,69 +582,5 @@ document.addEventListener("DOMContentLoaded", function() {
   jalankanMuatData();
 });
 </script>
-  <!-- MODAL KUITANSI / BUKTI BAYAR -->
-<div class="modal fade" id="modalKuitansi" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-body p-4" id="areaKuitansi">
-        <div class="text-center mb-3 border-bottom pb-2">
-          <h5 class="fw-bold mb-0">GKP AWILIGAR</h5>
-          <small class="text-muted">Bukti Pembayaran Iuran Jemaat</small>
-        </div>
-        
-        <table class="table table-borderless table-sm fs-6 mb-3">
-          <tr>
-            <td class="text-muted" style="width: 35%;">No. Transaksi</td>
-            <td style="width: 5%;">:</td>
-            <th><span id="kw_id_tx"></span></th>
-          </tr>
-          <tr>
-            <td class="text-muted">Tanggal Bayar</td>
-            <td>:</td>
-            <td><span id="kw_tgl"></span></td>
-          </tr>
-          <tr>
-            <td class="text-muted">ID / Nama Anggota</td>
-            <td>:</td>
-            <td><b><span id="kw_id_anggota"></span></b> - <span id="kw_nama"></span></td>
-          </tr>
-          <tr>
-            <td class="text-muted">Jenis / Riwayat</td>
-            <td>:</td>
-            <td><span id="kw_riwayat"></span></td>
-          </tr>
-          <tr>
-            <td class="text-muted">Jumlah Dibayar</td>
-            <td>:</td>
-            <td class="fs-5 fw-bold text-success"><span id="kw_nominal"></span></td>
-          </tr>
-          <tr>
-            <td class="text-muted">Status</td>
-            <td>:</td>
-            <td><span class="badge bg-success" id="kw_status">Lunas</span></td>
-          </tr>
-        </table>
-
-        <div class="d-flex justify-content-between text-center mt-4 pt-3 border-top fs-7 text-muted">
-          <div>
-            <p class="mb-4">Penyetor,</p>
-            <p class="mb-0"><u>(<span id="kw_ttd_penyetor"></span>)</u></p>
-          </div>
-          <div>
-            <p class="mb-4">Bendahara / Pengurus,</p>
-            <p class="mb-0"><u>( GKP Awiligar )</u></p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="modal-footer d-print-none">
-        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
-        <button type="button" class="btn btn-primary btn-sm" onclick="cetakKuitansi()">
-          <i class="fa-solid fa-print me-1"></i> Cetak / Simpan PDF
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
 </body>
 </html>
