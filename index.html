@@ -535,11 +535,21 @@ function jalankanMuatData() {
         data.laporan.forEach(row => {
           let idTx = row[0] || "-";
           
-          let tglStr = "-";
-          if (row[1]) {
-            let d = new Date(row[1]);
-            tglStr = isNaN(d.getTime()) ? row[1] : d.toLocaleDateString('id-ID');
-          }
+         // Ganti logika pemformatan tanggal lama di jalankanMuatData()
+let tglStr = "-";
+if (row[1]) {
+  let d = new Date(row[1]);
+  if (!isNaN(d.getTime())) {
+    // Mengambil tanggal saja dengan format Indonesia (DD/MM/YYYY)
+    tglStr = d.toLocaleDateString('id-ID', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  } else {
+    tglStr = row[1];
+  }
+}
           
           let jenis = row[2] || "Masuk";
           let badge = jenis === "Masuk" ? "success" : "danger";
