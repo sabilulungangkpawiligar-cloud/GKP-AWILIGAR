@@ -463,9 +463,14 @@ function handleIuran(e) {
     tampilkanNotif("Gagal mengirim data: " + err.message, "danger");
   });
 }
- function tampilkanKuitansi(data) {
+  
+function tampilkanKuitansi(data) {
   document.getElementById('kw_id_tx').textContent = data.id_transaksi;
-  document.getElementById('kw_tgl').textContent = data.tgl_bayar || new Date().toLocaleDateString('id-ID');
+  
+  // Format tanggal kuitansi tanpa jam
+  let tgl = data.tgl_bayar ? new Date(data.tgl_bayar) : new Date();
+  document.getElementById('kw_tgl').textContent = tgl.toLocaleDateString('id-ID');
+
   document.getElementById('kw_id_anggota').textContent = data.id_anggota;
   document.getElementById('kw_nama').textContent = data.nama_anggota;
   document.getElementById('kw_riwayat').textContent = data.riwayat || "Iuran Jemaat";
@@ -474,11 +479,10 @@ function handleIuran(e) {
   document.getElementById('kw_nominal').textContent = "Rp " + nominalNum.toLocaleString('id-ID');
   document.getElementById('kw_ttd_penyetor').textContent = data.nama_anggota;
 
-  // Buka Modal Kuitansi
   var modalKuitansi = new bootstrap.Modal(document.getElementById('modalKuitansi'));
   modalKuitansi.show();
 }
-
+  
 function cetakKuitansi() {
   window.print();
 } 
@@ -535,22 +539,21 @@ function jalankanMuatData() {
         data.laporan.forEach(row => {
           let idTx = row[0] || "-";
           
-         // Ganti logika pemformatan tanggal lama di jalankanMuatData()
-let tglStr = "-";
-if (row[1]) {
-  let d = new Date(row[1]);
-  if (!isNaN(d.getTime())) {
-    // Mengambil tanggal saja dengan format Indonesia (DD/MM/YYYY)
-    tglStr = d.toLocaleDateString('id-ID', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-  } else {
-    tglStr = row[1];
-  }
-}
-          
+              let tglStr = "-";
+        if (row[1]) {
+        let d = new Date(row[1]);
+        if (!isNaN(d.getTime())) {
+        // Mengambil tanggal saja dengan format Indonesia (DD/MM/YYYY)
+        tglStr = d.toLocaleDateString('id-ID', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        });
+        } else {
+        tglStr = row[1];
+        }
+        }
+
           let jenis = row[2] || "Masuk";
           let badge = jenis === "Masuk" ? "success" : "danger";
           let kategori = row[3] || "-";
